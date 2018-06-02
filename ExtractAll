@@ -1,0 +1,85 @@
+import requests
+import bs4
+import csv
+
+
+def name(x):
+    url = 'https://www.drugs.com' + x
+    req = requests.get(url)
+    soup = bs4.BeautifulSoup(req.text, 'lxml')
+    for a in soup.body.b:
+        return a
+
+
+def ingd(y):
+    url = 'https://www.drugs.com' + y
+    req = requests.get(url)
+    soup = bs4.BeautifulSoup(req.text, 'lxml')
+    string = [soup.find_all('p', limit=2)]
+    for a in string:
+        return a[1].text
+
+
+def purpose(y):
+    url = 'https://www.drugs.com' + y
+    req = requests.get(url)
+    soup = bs4.BeautifulSoup(req.text, 'lxml')
+    if soup.findAll('tr', attrs={'class': 'First Toprule'}):
+        for a in soup.findAll('tr', attrs={'class': 'First Toprule'}):
+            for b in a.select('td'):
+                print('')
+            return b.text
+
+    elif soup.findAll('tr', attrs={'class': 'Botrule Last'}):
+        for x in soup.findAll('tr', attrs={'class': 'First Toprule'}):
+            for y in x.select('td'):
+                print('')
+            return y.text
+
+    elif soup.findAll('div', attrs={'class': 'Section'}):
+        for a in soup.findAll('div', attrs={'class': 'Section'}, limit=4):
+            for b in a.select('.First'):
+                t = [b.text]
+        return b.text
+
+
+def uses(z):
+    url = 'https://www.drugs.com' + z
+    req = requests.get(url)
+    soup = bs4.BeautifulSoup(req.text, 'lxml')
+    if soup.findAll('div', attrs={'class': 'Section'}):
+        for a in soup.findAll('div', attrs={'class': 'Section'}, limit=5):
+
+            if a.findAll('ul', attrs={'class': 'Disc'}):
+                for c in a.findAll('ul', attrs={'class': 'Disc'}):
+                    for d in c.select('li'):
+                        t = [d.text]
+                return t
+
+            if a.findAll('ul', attrs={'class': 'Square'}):
+                for c in a.findAll('ul', attrs={'class': 'Square'}):
+                    for d in c.select('li'):
+                        t = [d.text]
+                return t
+
+    if soup.findAll('div', attrs={'class': 'Section'}):
+        for a in soup.findAll('div', attrs={'class': 'Section'}, limit=4):
+            for b in a.select('.First'):
+                t = [b.text]
+        return b.text
+
+
+def flex():
+    with open('Otc_demo.csv', 'a', newline='')as csvfile:
+        file_obj = open('OTC_FOR_A.csv', 'r')
+        writer = csv.writer(csvfile)
+        writer.writerow(['name', 'ingredient', 'purpose', 'uses'])
+        for r in csv.reader(file_obj):
+            r = list(csv.reader(file_obj))
+            for a in range(1, 11):
+                print(a)
+                writer.writerow([name(r[a][1]), ingd(r[a][1]), purpose(r[a][1]), uses(r[a][1])])  # here r[m][n] we
+                # have [m] as row and [n] as column
+
+
+flex()
