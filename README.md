@@ -13,9 +13,9 @@ Also, crawlers can be used to gather specific types of information from Web page
 About the Online Crawler:-
   This Crawler crawl on specific website url and find information relevant to user, regular expression can be used extract a particular information.
   modules used:-
-  BeautifulSoup4
-  request
-  re
+  BeautifulSoup4,
+  request,
+  re,
   csv 
   
 
